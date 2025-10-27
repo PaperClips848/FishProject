@@ -1,62 +1,71 @@
-% script        totalSpecies_perSight_barGraph
-% purpose       Plot a bar graph showing the species richness (number of 
-%               genera present) at each sampling site.
+% script        totalFish_perSight_barGraph
+% purpose       Plot bar graphs showing (1) species richness (number of genera)
+%               and (2) total fish count for each sampling site.
 % usage         Run the script directly after setting the working directory.
-% notes         Requires: seth_genusCountData_june2024.csv
-% date          10/04/2025
+% notes         Requires: ../data/seth_environmentalGenusCountData_nov2024.csv
+% date          10/21/2025
 % programmer    K.L. Brashears
 
-% ========================== COMMON INITIALIZATION ========================
-programName_c = mfilename;                              % get script name
-msgl_c = [programName_c, ': ', date];                   % message with script name and date
-msg3_c = 'K.L. Brashears';                              % author
-if ~exist('figNum', 'var')                              % check if figNum exists
-    figNum = 1;                                         % set default figure number
-end
-plotNotes_h;                                            % load plot formatting definitions
+% ========================== INITIALIZATION ================================
+programName_c = mfilename;                                   % Get script name
+msgl_c = [programName_c, ': ', date];                        % Create label with script name and date
+msg3_c = 'K.L. Brashears';                                   % Author name
 
-% ============= GETTING AND COUNTING THE GENUS PRESENCE ===================
-fileName_c = '../data/seth_environmentalGenusCountData_nov2024.csv';        % data file name
-gc_t = readtable(fileName_c);                           % read CSV into a table
-
-sn_v = (1:46);                                      % site identifiers (first column)
-gc_m = gc_t{:, 27:56};                                  % numeric genus count data only
-
-ts_v = gc_t.t_species;                                % number of genera present at each site (species richness)
-tf_v = gc_t.t_population;                                % number of genera present at each site (species richness)
-
-[ts_sv, idx] = sort(ts_v, 'descend');                   % sort richness values (high to low)
-sns_sv = sn_v(idx);                                      % reorder site names accordingly
-
-[tf_sv, idx] = sort(tf_v, 'descend');                   % sort richness values (high to low)
-snf_sv = sn_v(idx);                                      % reorder site names accordingly
-
-sns_c = categorical(sns_sv);                              % convert sorted site names to categorical
-sns_rc = reordercats(sns_c, sns_sv);                       % lock category order to sorted order
-
-snf_c = categorical(snf_sv);                              % convert sorted site names to categorical
-snf_rc = reordercats(snf_c, snf_sv);                       % lock category order to sorted order
-
-% ============================= PLOT RESULTS ==============================
-if ~exist('fileNameData_c', 'var')                      % check if data file name variable exists
-    fileNameData_c = '';                                % set default blank value
+if ~exist('figNum', 'var')                                   % Check if figure number variable exists
+    figNum = 1;                                              % Default figure number
 end
 
-figure(figNum), figNum = figNum + 1; clf;               % create new figure and increment figNum
-set(gcf, 'Position', plotPositionWide_v);               % set figure size and layout
+plotNotes_h;                                                 % Load plot formatting definitions
 
-subplot(211);
-bar(sns_rc, ts_sv);                                      % plot bar graph of species richness per site
-title('Total Species per Site', 'Interpreter', 'none'); % title for the figure
-xlabel('Site', 'Interpreter', 'none');                  % label x-axis
-ylabel('Number of Genera Present', 'Interpreter', 'none'); % label y-axis
-xtickangle(45);                                         % rotate x-axis labels for readability
+% ======================= READ AND PREPARE DATA =============================
+fileName_c = '../data/seth_environmentalGenusCountData_nov2024.csv';  % Path to dataset
+gc_t = readtable(fileName_c);                                % Read data table from CSV
 
-subplot(212);
-bar(snf_rc, tf_sv);                                      % plot bar graph of species richness per site
-title('Total Fish per Site', 'Interpreter', 'none'); % title for the figure
-xlabel('Site', 'Interpreter', 'none');                  % label x-axis
-ylabel('Number of Fish Present', 'Interpreter', 'none'); % label y-axis
-xtickangle(45);                                         % rotate x-axis labels for readability
+sn_v = (1:height(gc_t));                                     % Generate site numbers (1:N)
+gc_m = gc_t{:, 27:56};                                       % Extract numeric genus count data
 
-label_plotEdges(msgl_c, fileNameData_c, msg3_c, '');    % label figure edges with metadata
+ts_v = gc_t.t_species;                                       % Species richness (number of genera per site)
+tf_v = gc_t.t_population;                                    % Total fish count per site
+
+% ======================== SORT SITES BY METRICS ============================
+[ts_sv, idx] = sort(ts_v, 'descend');                        % Sort species richness values (high to low)
+sns_sv = sn_v(idx);                                          % Reorder site numbers accordingly
+
+[tf_sv, idx] = sort(tf_v, 'descend');                        % Sort total fish counts (high to low)
+snf_sv = sn_v(idx);                                          % Reorder site numbers accordingly
+
+% Convert to categorical for ordered bar plotting
+sns_c = categorical(sns_sv);                                 
+sns_rc = reordercats(sns_c, sns_sv);                         % Maintain sorted order for species richness
+
+snf_c = categorical(snf_sv);
+snf_rc = reordercats(snf_c, snf_sv);                         % Maintain sorted order for total fish count
+
+% ============================= PLOT RESULTS ================================
+if ~exist('fileNameData_c', 'var')                           % Check for data file name variable
+    fileNameData_c = '';                                     % Default blank
+end
+
+figure(figNum); figNum = figNum + 1;                         % Create new figure and increment counter
+set(gcf, 'Position', plotPositionWide_v);                    % Set figure size and layout
+
+% --- (A) Species Richness per Site ---
+subplot(2,1,1);
+bar(sns_rc, ts_sv);                                          % Bar graph of species richness per site
+title('Species Richness per Site');                          % Title
+xlabel('Site Number');                                       % X-axis label
+ylabel('Number of Genera Present');                          % Y-axis label
+xtickangle(45);                                              % Rotate x-axis labels
+grid on;
+
+% --- (B) Total Fish Count per Site ---
+subplot(2,1,2);
+bar(snf_rc, tf_sv);                                          % Bar graph of total fish count per site
+title('Total Fish Count per Site');                          % Title
+xlabel('Site Number');                                       % X-axis label
+ylabel('Total Number of Fish');                              % Y-axis label
+xtickangle(45);                                              % Rotate x-axis labels
+grid on;
+
+% ============================= LABEL METADATA =============================
+label_plotEdges(msgl_c, fileNameData_c, msg3_c, '');         % Add metadata labels to figure edges

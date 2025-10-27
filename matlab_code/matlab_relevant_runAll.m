@@ -1,0 +1,28 @@
+% script        matlab_relevant_runAll
+% purpose       Run all relevant MATLAB scripts and generate corresponding figures.
+% usage         Run this script directly after setting the working directory.
+% notes         Requires:
+%                   Scripts:
+%                       total_countPerGenus_barGraph.m
+%                       totalSpecies_perSight_barGraph.m
+%                       sightN_attributes_barGraph.m
+%                       totalCountAndSpecies_vsAttribute_scatterPlot.m
+%                   Data:
+%                       ../data/seth_environmentalGenusCountData_nov2024.csv
+%
+% date          10/27/2025
+% programmer    K.L. Brashears
+
+% =========================== RUNNING SCRIPTS ==============================
+
+% --- Run genus-level total counts ---
+run("total_countPerGenus_barGaph.m");             % Generates total fish count per genus bar chart
+
+% --- Run per-site richness and population plots ---
+run("totalFish_perSight_barGraph.m");           % Generates per-site species richness and fish count plots
+
+% --- Run attribute visualization for a specific site ---
+figNum = siteN_attributes_barGraph(figNum, 2);                     % Plots environmental attributes for a given site (example: site 2)
+
+% --- Run scatter plots comparing community metrics to an environmental variable ---
+figNum = totalCountAndSpecies_vsAttribute_scatterPlot(figNum, "upstreamCumDA_km2");  % Example attribute: drainage area (km²)

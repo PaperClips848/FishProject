@@ -1,0 +1,21 @@
+% script        matlab_relevant_runAll
+% purpose       Run all relevent matlab figures and display them
+% usage         Run the script directly after setting the working directory.
+% notes         Requires: 
+%                   Scripts: 
+%                           total_countPerGenus_barGaph.m
+%                           totalFish_perSight_barGraph.m
+%                           sightN_attributes_barGraph.m
+%                           totalCountAndSpecies_vsAttribute_scatterPlot.m
+%                   Data:   
+%                           seth_environmentalGenusCountData_nov2024.csv
+%                       
+% date          10/027/2025
+% programmer    K.L. Brashears
+
+% =========================== RUNNING SCRIPTS =============================
+
+run("total_countPerGenus_barGaph.m")
+run("totalFish_perSight_barGraph.m")
+sightN_attributes_barGraph(2)
+totalCountAndSpecies_vsAttribute_scatterPlot()

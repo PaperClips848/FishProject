@@ -17,7 +17,7 @@ plotNotes_h                                             % set plot definitions
 
 % ============= GETTING AND SORTING THE GENUS COUNTS ======================
 
-fileName_c = 'seth_environmentalData_march2023.csv';    % file name containing data
+fileName_c = '../data/seth_environmentalGenusCountData_nov2024.csv';    % file name containing data
 ed_t = readtable(fileName_c);                           % reading the csv into a table
 
 sight = 1;
