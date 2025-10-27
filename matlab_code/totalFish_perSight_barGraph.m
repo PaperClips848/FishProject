@@ -22,8 +22,8 @@ gc_t = readtable(fileName_c);                           % read CSV into a table
 sn_v = (1:46);                                      % site identifiers (first column)
 gc_m = gc_t{:, 27:56};                                  % numeric genus count data only
 
-ts_v = gc_t.t_genus;                                % number of genera present at each site (species richness)
-tf_v = gc_t.t_fish;                                % number of genera present at each site (species richness)
+ts_v = gc_t.t_species;                                % number of genera present at each site (species richness)
+tf_v = gc_t.t_population;                                % number of genera present at each site (species richness)
 
 [ts_sv, idx] = sort(ts_v, 'descend');                   % sort richness values (high to low)
 sns_sv = sn_v(idx);                                      % reorder site names accordingly
