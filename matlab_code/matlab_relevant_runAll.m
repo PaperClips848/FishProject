@@ -23,6 +23,10 @@ end
 % --- Run scatter plots comparing community metrics to an environmental variable ---
 figNum = totalCountAndSpecies_vsAttribute_scatterPlot(figNum, "upstreamCumDA_km2");     % Example attribute: upstreamCumDA_km2
 
+figNum = totalCountAndSpecies_vsAttribute_scatterPlot(figNum, "pfloat_macrophytes");     % Example attribute: upstreamCumDA_km2
+
+figNum = totalCountAndSpecies_vsAttribute_scatterPlot(figNum, "pbottom_Bedrock");     % Example attribute: upstreamCumDA_km2
+
 % --- Run attribute visualization for a specific sites ---
 
 % --- Sites with high Total Population AND Species Richness ---
@@ -40,6 +44,12 @@ figNum = siteN_attributes_barGraph(figNum, 17);
 figNum = siteN_attributes_barGraph(figNum, 2);
 
 figNum = siteN_attributes_barGraph(figNum, 18);
+
+% --- Outlier Sites ---
+
+figNum = siteN_attributes_barGraph(figNum, 43);                                         % Site is the only one with a hight pbottom_Bedrock and high population            
+
+figNum = siteN_attributes_barGraph(figNum, 1);                                          % low population to species ratio
 
 % --- Run per-site richness and population plots ---
 run("totalFish_perSight_barGraph.m");                                                   % Generates per-site species richness and fish count plots
