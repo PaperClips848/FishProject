@@ -50,4 +50,4 @@ xtickangle(45);                                              % Rotate x-axis lab
 grid on;                                                     % Add grid for clarity
 
 % ============================== LABEL METADATA =============================
-label_plotEdges(msgl_c, fileNameData_c, msg3_c, '');         % Label figure edges with metadata
+label_plotEdges(msgl_c, fileName_c, msg3_c, '');         % Label figure edges with metadata

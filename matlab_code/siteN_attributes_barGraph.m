@@ -49,6 +49,6 @@ function [figNum] = siteN_attributes_barGraph(figNum, siteN)
     grid on;                                                     % Add background grid for clarity
 
     % =========================== LABEL METADATA ===============================
-    label_plotEdges(msgl_c, fileNameData_c, msg3_c, '');         % Add metadata around figure edges
+    label_plotEdges(msgl_c, fileName_c, msg3_c, '');         % Add metadata around figure edges
 
 end

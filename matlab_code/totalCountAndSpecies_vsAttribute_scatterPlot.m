@@ -42,7 +42,7 @@ function [figNum] = totalCountAndSpecies_vsAttribute_scatterPlot(figNum, yAttr_c
     nexttile;                                                     % First subplot
     scatter(yData_v, t_genus, 50, 'b', 'filled');                 % Plot scatter of species richness
     xlabel(strrep(yAttr_c, '_', ' '));                            % Replace underscores for readability
-    ylabel('Species Richness (Number of Genera)');                % Y-axis label
+    ylabel('Species Richness');                                   % Y-axis label
     title('Species Richness vs Environmental Attribute');         % Subplot title
     grid on; hold on;
     
@@ -51,8 +51,7 @@ function [figNum] = totalCountAndSpecies_vsAttribute_scatterPlot(figNum, yAttr_c
     xfit1 = linspace(min(yData_v), max(yData_v), 100);            % Generate fit X values
     yfit1 = polyval(coeffs1, xfit1);                              % Compute fitted Y values
     plot(xfit1, yfit1, 'k--', 'LineWidth', 1.5);                  % Plot trend line
-    legend('Data Points', sprintf('Trend Line (y = %.2fx + %.2f)', ...
-        coeffs1(1), coeffs1(2)), 'Location', 'best');             % Add legend
+    legend('Data Points', 'Trend Line', 'Location', 'best');             % Add legend
     
     % ==================== (B) TOTAL FISH COUNT VS ATTRIBUTE ===================
     nexttile;                                                     % Second subplot
@@ -67,13 +66,12 @@ function [figNum] = totalCountAndSpecies_vsAttribute_scatterPlot(figNum, yAttr_c
     xfit2 = linspace(min(yData_v), max(yData_v), 100);            % Generate fit X values
     yfit2 = polyval(coeffs2, xfit2);                              % Compute fitted Y values
     plot(xfit2, yfit2, 'k--', 'LineWidth', 1.5);                  % Plot trend line
-    legend('Data Points', sprintf('Trend Line (y = %.2fx + %.2f)', ...
-        coeffs2(1), coeffs2(2)), 'Location', 'best');             % Add legend
+    legend('Data Points', 'Trend Line', 'Location', 'best');             % Add legend
     
     % ============================ FIGURE LABELING =============================
     sgtitle(sprintf('Fish Community Metrics vs %s', ...
         strrep(yAttr_c, '_', ' ')));                              % Overall figure title
     
-    label_plotEdges(msgl_c, fileName_c, msg3_c, '');               % Label figure edges with metadata
+    label_plotEdges(msgl_c, fileName_c, msg3_c, '');              % Label figure edges with metadata
 
 end

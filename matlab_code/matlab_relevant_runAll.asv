@@ -1,21 +1,40 @@
 % script        matlab_relevant_runAll
-% purpose       Run all relevent matlab figures and display them
-% usage         Run the script directly after setting the working directory.
-% notes         Requires: 
-%                   Scripts: 
-%                           total_countPerGenus_barGaph.m
-%                           totalFish_perSight_barGraph.m
-%                           sightN_attributes_barGraph.m
-%                           totalCountAndSpecies_vsAttribute_scatterPlot.m
-%                   Data:   
-%                           seth_environmentalGenusCountData_nov2024.csv
-%                       
-% date          10/027/2025
+% purpose       Run all relevant MATLAB scripts and generate corresponding figures.
+% usage         Run this script directly after setting the working directory.
+% notes         Requires:
+%                   Scripts:
+%                       total_countPerGenus_barGraph.m
+%                       totalSpecies_perSight_barGraph.m
+%                       sightN_attributes_barGraph.m
+%                       totalCountAndSpecies_vsAttribute_scatterPlot.m
+%                   Data:
+%                       ../data/seth_environmentalGenusCountData_nov2024.csv
+%
+% date          10/27/2025
 % programmer    K.L. Brashears
 
-% =========================== RUNNING SCRIPTS =============================
+% =========================== RUNNING SCRIPTS ==============================
 
-run("total_countPerGenus_barGaph.m")
-run("totalFish_perSight_barGraph.m")
-sightN_attributes_barGraph(2)
-totalCountAndSpecies_vsAttribute_scatterPlot()
+% --- Run scatter plots comparing community metrics to an environmental variable ---
+figNum = totalCountAndSpecies_vsAttribute_scatterPlot(figNum, "upstreamCumDA_km2");  % Example attribute: drainage area (km²)
+
+% --- Run attribute visualization for a specific sites ---
+
+% --- Sites with high Total Population AND Species Richness ---
+
+figNum = siteN_attributes_barGraph(figNum, 4);                     % Plots environmental attributes for a given site (example: site 4)
+
+figNum = siteN_attributes_barGraph(figNum, 29);
+
+figNum = siteN_attributes_barGraph(figNum, 33);
+
+% --- Sites with low Total Population AND Species Richness ---
+
+figNum = siteN_attributes_barGraph(figNum, lpsn_v);                     
+
+
+% --- Run per-site richness and population plots ---
+run("totalFish_perSight_barGraph.m");           % Generates per-site species richness and fish count plots
+
+% --- Run genus-level total counts ---
+run("total_countPerGenus_barGaph.m");             % Generates total fish count per genus bar chart
