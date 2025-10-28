@@ -4,3 +4,4 @@
 
 [Presentation](https://docs.google.com/presentation/d/1J4vIi1q13mCjn6pkxDxXc2Rv3uEuJSRD93dfjtj-gJ4/edit?usp=sharing)
 
+[General Observations](https://docs.google.com/document/d/1y5VSn03M2magu8mzADfRvrohOqK-53rhWrrsvET5PeY/edit?usp=sharing)
