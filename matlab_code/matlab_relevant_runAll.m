@@ -52,7 +52,7 @@ figNum = siteN_attributes_barGraph(figNum, 43);                                 
 figNum = siteN_attributes_barGraph(figNum, 1);                                          % low population to species ratio
 
 % --- Run per-site richness and population plots ---
-run("totalFish_perSight_barGraph.m");                                                   % Generates per-site species richness and fish count plots
+run("totalFish_perSight_barGraph");                                                   % Generates per-site species richness and fish count plots
 
 % --- Run genus-level total counts ---
-run("total_countPerGenus_barGaph.m");                                                   % Generates total fish count per genus bar chart
+run("total_countPerSpecies_barGaph");                                                   % Generates total fish count per genus bar chart
