@@ -1,4 +1,4 @@
-% script        matlab_relevant_runAll
+  % script        matlab_relevant_runAll
 % purpose       Run all relevant MATLAB scripts and generate corresponding figures.
 % usage         Run this script directly after setting the working directory.
 % notes         Requires:
