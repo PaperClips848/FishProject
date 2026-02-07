@@ -35,7 +35,7 @@
 #         If None, today's date is automatically inserted under the author.
 #
 # outputs:
-#     Saves a figure to disk with standardized edge labels (if save=True).
+#     Saves a figure to disk with standardized edge labels (if save=True, default False).
 #
 # notes:
 #     - Automatically handles single strings or lists.
@@ -55,7 +55,7 @@ def label_plot_edges(
         data_filenames,
         fig_filename=None,
         message="",
-        save=True,
+        save=False,
         date_generated=None,
         top_left=[0.050, 0.93, 0.20, 0.04],
         top_right=[0.750, 0.93, 0.20, 0.04],
@@ -87,6 +87,8 @@ def label_plot_edges(
 
     # Add date under author
     author_block = author_text + f"\n{date_generated}"
+    
+    plt.subplots_adjust(bottom=0.25)                                        # adjusting the bottom margin to prevent x-axis labels from being cut off
 
     # Top-left: program names
     plt.subplot(position=top_left)
