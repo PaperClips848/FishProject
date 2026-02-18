@@ -1,10 +1,13 @@
 {
     "cSpell.words": [
+        "arrowprops",
+        "arrowstyle",
         "barplot",
         "brashears",
         "edgecolor",
         "edmgc",
         "egcd",
+        "Etheostoma",
         "figsize",
         "fileoutput",
         "fontsize",
@@ -12,8 +15,11 @@
         "kbrashears",
         "Korbin",
         "linecolor",
+        "lineplot",
         "linestyle",
+        "macrophytes",
         "programname",
+        "Radiosum",
         "regplot",
         "scatterplot",
         "skyblue",
@@ -22,6 +28,7 @@
         "UMAP",
         "xlabel",
         "xticks",
-        "ylabel"
+        "ylabel",
+        "zorder"
     ]
 }
