@@ -30,7 +30,7 @@ fileName_c = 'data/seth_gov_envData10dtsMetrics_genusCount2026.csv'
 programMsg_c = script_name + ' (' + date_c + ')' #changed from programName_c to script_name
 authorName_c = 'Xavier Ramirez'
 
-fig_dir = os.path.abspath(os.path.join(programName_c, "..", "figures")) #NEW
+fig_dir = os.path.abspath(os.path.join(programName_c, "..", "..", "..", "figures")) #NEW
 os.makedirs(fig_dir, exist_ok=True) #NEW
 figName_c = os.path.join(fig_dir, f"{script_name}_fig.png") #NEW
 
@@ -157,11 +157,11 @@ plt.legend()
 X_comb = df[list(env_cols) + list(timeMet)]             # 4-25, 59-202 are combined metrics 
 
 # ============== 12. Standardize the data ==================
-scaler = StandardScaler()                   # standardize environmental attributes
+scaler = StandardScaler()                     # standardize environmental attributes
 X_comb_scaled = scaler.fit_transform(X_comb)  # ensures PCA is not dominated by large-scale variables
 
 # ============== 13. Standardize the environmental variables 
-pca_comb = PCA()                             # initialize PCA model
+pca_comb = PCA()                              # initialize PCA model
 pca_comb.fit(X_comb_scaled)                   # fit PCA to standardized data
 
 # ============== 14. Fit PCA (all components) ==============
