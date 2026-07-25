@@ -68,14 +68,25 @@ def label_plot_edges(
     ):
     """Add standardized edge labels and optionally save the figure."""
 
+    
     # Auto-detect program name if not provided
     if program_names is None:
-        caller_file = inspect.getfile(inspect.stack()[1][0])
-        program_names = os.path.basename(caller_file)
+        try:
+            caller_file = inspect.getfile(inspect.stack()[1][0])
+            program_names = os.path.basename(caller_file)
 
-        if program_names.replace('.py', '').isdigit() or 'interactiveshell' in program_names:
-            caller_file = ipynbname.name()
-            program_names = f"{ipynbname.name()}.ipynb"
+            if (
+                program_names.replace(".py", "").isdigit()
+                or "interactiveshell" in program_names.lower()
+            ):
+                try:
+                    program_names = f"{ipynbname.name()}.ipynb"
+                except Exception:
+                    program_names = "JupyterNotebook.ipynb"
+
+        except Exception:
+            program_names = "UnknownProgram"
+
 
 
     # If saving, a filename MUST be provided
