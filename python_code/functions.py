@@ -1,22 +1,26 @@
 import matplotlib.pyplot as plt
 from datetime import datetime
-from PIL import Image, ImageDraw
+
+import os
+import inspect
+import ipynbname
 
 # ============================================================
 # function:     label_plot_edges
-# purpose:      Add standardized edge labels (program names, authors,
-#               data files, and optional message) to a matplotlib figure.
-#               Supports single strings or lists for each field.
+# purpose:      Add standardized edge labels (program name, author,
+#               data sources, date, and optional message) to a matplotlib
+#               figure. Automatically detects the calling script or notebook
+#               when program_names is not provided.
 #
-# usage:        Import into any plotting script and call:
-#               label_plot_edges(program_names, author_names,
-#                                 data_filenames, fig_filename=None,
-#                                 message="", save=True,
-#                                 date_generated=None)
+# usage:        label_plot_edges(author_names="KLB",
+#                                 data_filenames="dataset.csv",
+#                                 fig_filename="plot.png",
+#                                 save=True)
 #
 # inputs:
-#     program_names : str or list of str
+#     program_names : str, list, or None
 #         Name(s) of the program/script generating the figure.
+#         If None, the function automatically detects the caller's filename.
 #
 #     author_names : str or list of str
 #         Name(s) of the author(s) or collaborators.
@@ -25,35 +29,34 @@ from PIL import Image, ImageDraw
 #         Dataset(s) used to generate the figure.
 #
 #     fig_filename : str or None
-#         Output filename for the saved figure (e.g., "plot_fig.png").
-#         Required only when save=True.
+#         Output filename for the saved figure. Required when save=True.
 #
 #     message : str, optional
 #         Additional text to display (e.g., notes, version tags).
 #
-#     save : bool, optional (default=True)
-#         If True, the figure is saved to disk. If False, labels are added
-#         but the figure is not saved.
+#     save : bool, optional (default=False)
+#         If True, the figure is saved to disk with metadata labels.
 #
 #     date_generated : str or None
-#         If None, today's date is automatically inserted under the author.
+#         If None, today's date is automatically inserted.
 #
 # outputs:
-#     Saves a figure to disk with standardized edge labels (if save=True, default False).
+#     Saves a figure to disk (if save=True) and adds standardized
+#     metadata labels to the edges of the current matplotlib figure.
 #
 # notes:
-#     - Automatically handles single strings or lists.
-#     - Places labels in four fixed positions around the figure.
-#     - Ensures consistent formatting across all scripts.
+#     - Automatically detects the calling script using inspect.
+#     - Falls back to "JupyterNotebook.ipynb" when run inside notebooks.
+#     - Ensures consistent metadata formatting across all plots.
 #
-# date:         02/05/2026
+# date:         02/05/2026 (updated 06/26/2026)
 # programmer:   Korbin Brashears
 # ============================================================
 
 def label_plot_edges(
-        program_names,
-        author_names,
-        data_filenames,
+        program_names=None,
+        author_names=None,
+        data_filenames=None,
         fig_filename=None,
         message="",
         save=False,
@@ -64,6 +67,16 @@ def label_plot_edges(
         bottom_mid=[0.350, 0.01, 0.20, 0.04]
     ):
     """Add standardized edge labels and optionally save the figure."""
+
+    # Auto-detect program name if not provided
+    if program_names is None:
+        caller_file = inspect.getfile(inspect.stack()[1][0])
+        program_names = os.path.basename(caller_file)
+
+        if program_names.replace('.py', '').isdigit() or 'interactiveshell' in program_names:
+            caller_file = ipynbname.name()
+            program_names = f"{ipynbname.name()}.ipynb"
+
 
     # If saving, a filename MUST be provided
     if save and fig_filename is None:
@@ -83,13 +96,13 @@ def label_plot_edges(
 
     # Convert lists to multi-line strings
     program_text = "\n".join(program_names)
-    author_text = "\n".join(author_names)
-    data_text = "\n".join(data_filenames)
+    author_text = "\n".join(author_names) if author_names else ""
+    data_text = "\n".join(data_filenames) if data_filenames else ""
 
     # Add date under author
     author_block = author_text + f"\n{date_generated}"
-    
-    plt.subplots_adjust(bottom=0.25)                                        # adjusting the bottom margin to prevent x-axis labels from being cut off
+
+    plt.subplots_adjust(bottom=0.25)
 
     # Top-left: program names
     plt.subplot(position=top_left)
@@ -115,127 +128,212 @@ def label_plot_edges(
     if save:
         plt.savefig(fig_filename, dpi=200)
 
-#-------------------------------------------------------------------------------------------------------------------------------
+    plt.show()
+
+
 
 # ============================================================
-# function:     lat_long_plotter
-# purpose:      Add standardized edge labels (program names, authors,
-#               data files, and optional message) to a matplotlib figure.
-#               Supports single strings or lists for each field.
+# function:     scatter_trendLine_plotter
+# purpose:      Generate a standardized scatter plot with an overlaid
+#               regression trend line, optional point index labels, and
+#               automated edge-label metadata via label_plot_edges().
 #
-# usage:        Import into any plotting script and call:
-#               label_plot_edges(program_names, author_names,
-#                                 data_filenames, fig_filename=None,
-#                                 message="", save=True,
-#                                 date_generated=None)
+# usage:        Call within any analysis or reporting script:
+#               scatter_trendLine_plotter(x_series, y_series,
+#                                         pointLabels=True,
+#                                         save=False)
 #
 # inputs:
-#     program_names : str or list of str
-#         Name(s) of the program/script generating the figure.
+#     x : pandas Series
+#         Independent variable to plot on the x-axis.
 #
-#     author_names : str or list of str
-#         Name(s) of the author(s) or collaborators.
+#     y : pandas Series
+#         Dependent variable to plot on the y-axis.
 #
-#     data_filenames : str or list of str
-#         Dataset(s) used to generate the figure.
+#     pointLabels : bool, optional (default=True)
+#         If True, each point is annotated with its index value.
 #
-#     fig_filename : str or None
-#         Output filename for the saved figure (e.g., "plot_fig.png").
-#         Required only when save=True.
-#
-#     message : str, optional
-#         Additional text to display (e.g., notes, version tags).
-#
-#     save : bool, optional (default=True)
-#         If True, the figure is saved to disk. If False, labels are added
-#         but the figure is not saved.
-#
-#     date_generated : str or None
-#         If None, today's date is automatically inserted under the author.
+#     save : bool, optional (default=False)
+#         If True, the figure is saved using label_plot_edges() with the
+#         appropriate filename and metadata. Requires global saveAll flag.
 #
 # outputs:
-#     Saves a figure to disk with standardized edge labels (if save=True, default False).
+#     Displays a scatter plot with a regression trend line. Optionally
+#     saves the figure to disk if save=True and saveAll=True.
 #
 # notes:
-#     - Automatically handles single strings or lists.
-#     - Places labels in four fixed positions around the figure.
-#     - Ensures consistent formatting across all scripts.
+#     - Uses seaborn for both scatter and regression plotting.
+#     - Automatically titles the figure using the x and y variable names.
+#     - Integrates with label_plot_edges() for consistent metadata labeling.
+#     - Designed for quick exploratory visualization of linear trends.
 #
-# date:         02/05/2026
+# date:         02/11/2026
 # programmer:   Korbin Brashears
 # ============================================================
 
-def lat_long_plotter(
-        image_path,
-        coords_groups,         # list of groups, each group is a list of (name, lat, lon)
-        lat_top,
-        lon_left,
-        lat_bottom,
-        lon_right,
-        colors=None,            # optional list of colors, one per group
-        save=False,
-        save_path=None
-    ):
-    """
-    Plot multiple groups of lat/lon points onto ANY PNG using simple linear
-    interpolation (same method used by the Mobisoft map tool).
 
-    coords_groups example:
-    [
-        [("Site A1", lat, lon), ("Site A2", lat, lon)],   # group 1
-        [("Site B1", lat, lon)],                          # group 2
-        ...
-    ]
-    """
+# ====================================================== Defining Function =========================================================
 
-    # Load image
-    img = Image.open(image_path)
-    draw = ImageDraw.Draw(img)
-    w, h = img.size
+def scatter_trendLine_plotter(x, y, pointLabels=True, save=False):
 
-    # Default colors if none provided
-    if colors is None:
-        colors = ["red", "blue", "green", "purple", "orange", "cyan"]
+    import seaborn as sns
+    
+    # ===================================================== Plotting ===============================================================
+    
+    plt.figure(figsize=(10, 6))                                                                       # creating the figure for the scatter plot with matplotlib
+    
+    # Adding Trend Line
+    sns.regplot(
+        x=x,
+        y=y,
+        scatter=False,        # turn off regplot’s own dots
+        line_kws={"linewidth": 2, "linestyle": "--", "zorder": 1, "color": "#000000"}
+    )
+    
+    # Creating Scatter Plot
+    sns.scatterplot(
+        x=x,
+        y=y,
+        s=60,                 # dot size
+        color="#ff0000",      # custom hex color (red)
+        #zorder=2,
+        edgecolor="black"     # optional: outline around dots
+    )
+    
+    # Adding Point Index Labels (if enabled)
+    if pointLabels:
+        for i in range(len(x)):
+            plt.text(x[i], y[i], str(i), fontsize=9, ha='right', va='bottom', color='#000099', zorder=3)       # adding index labels to each point
+    
+    # Labeling Axis and Title
+    plt.xlabel(x.name)                                                                             # setting x-axis label as the specified attribute
+    plt.ylabel(y.name)                                                                          # setting y-axis label
+    
+    plt.title(f'{y.name} vs {x.name}')                                                # setting the title of the plot with the specified attribute
 
-    # ---------------------------------------------------------
-    # Linear interpolation mapping (Mobisoft method)
-    # ---------------------------------------------------------
-    def latlon_to_pixel(lat, lon):
-        # Longitude → x (left to right)
-        x = (lon - lon_left) / (lon_right - lon_left) * w
+    # ============================================= Adding Plot Edge Labels ======================================================
+    
+    # Adding Plot Edge Labels
+    label_plot_edges(                                          # calling the function to label the edges of the plot
+        author_names="Korbin Brashears", 
+        data_filenames="seth_envData_2025.csv", 
+        fig_filename=f"../figures/kbrashears_fishData_report_02042026/{x.name}_vs_{y.name}_trendLine.png",
+        save = save                                
+    )
+    
+    plt.show()                                                                             
+    
+    return None
 
-        # Latitude → y (top to bottom)
-        y = (lat_top - lat) / (lat_top - lat_bottom) * h
 
-        return int(x), int(y)
+# ============================================================
+# function:     corr_decay_plotter
+# purpose:      Compute and visualize the correlation decay pattern between a
+#               target attribute (Series) and a set of environmental or biological
+#               features (DataFrame). Produces a sorted correlation plot showing
+#               both positive and negative relationships, with negative correlations
+#               highlighted separately. Automatically applies standardized plot
+#               metadata via label_plot_edges().
+#
+# usage:        corr_decay_plotter(attribute_series, feature_dataframe,
+#                                   save=False)
+#
+# inputs:
+#     attribute : pandas Series
+#         The focal variable whose correlation with all features will be computed.
+#         Example: a species abundance vector or an environmental attribute.
+#
+#     features : pandas DataFrame
+#         A DataFrame containing multiple numeric feature columns to correlate
+#         against the attribute. Must be numeric or convertible to numeric.
+#
+#     save : bool, optional (default=False)
+#         If True, the figure is saved using label_plot_edges() with the
+#         appropriate filename and metadata. Uses global saveAll override
+#         if present.
+#
+# outputs:
+#     Displays a correlation-decay plot showing:
+#         - Sorted absolute correlation magnitudes
+#         - Positive correlations (blue)
+#         - Negative correlations (orange)
+#     Optionally saves the figure to disk if save=True.
+#
+# notes:
+#     - Uses pandas.corrwith() for efficient vectorized correlation computation.
+#     - Negative correlations are tracked separately and plotted distinctly.
+#     - Integrates with label_plot_edges() for consistent metadata labeling.
+#     - Designed for exploratory analysis of feature importance and correlation
+#       structure in ecological or environmental datasets.
+#
+# date:         02/11/2026
+# programmer:   Korbin Brashears
+# ============================================================
 
-    # ---------------------------------------------------------
-    # Plot each group in its own color
-    # ---------------------------------------------------------
-    for group_idx, group in enumerate(coords_groups):
-        color = colors[group_idx % len(colors)]
 
-        for name, lat, lon in group:
-            px, py = latlon_to_pixel(lat, lon)
+# ====================================================== Defining Function =========================================================
 
-            # Draw point
-            draw.ellipse((px-4, py-4, px+4, py+4), fill=color)
+def corr_decay_plotter(attribute, features, save=False):
 
-            # Draw label
-            draw.text((px+6, py-6), name, fill=color)
-
-    # ---------------------------------------------------------
-    # Save if requested
-    # ---------------------------------------------------------
-    if save:
-        if save_path is None:
-            raise ValueError("save_path must be provided when save=True")
-        img.save(save_path)
-
-    # ---------------------------------------------------------
-    # ALWAYS show inline using matplotlib
-    # ---------------------------------------------------------
-    plt.figure(figsize=(10, 10))
-    plt.imshow(img)
-    plt.axis("off")
+    import seaborn as sns
+    
+    # ===================================================== Data Analysis =========================================================
+    
+    # Calculating Correlations with Respect to the Specified Attribute
+    cd_raw = features.corrwith(attribute, numeric_only=True)      # signed correlations
+    neg_idx = cd_raw < 0                                          # mask for negative correlations
+    cd = cd_raw.abs()                                             # absolute values for plotting
+    
+    # Sorting Correlation Values
+    cd_sorted = cd.sort_values(ascending=False)                   # descending order
+    neg_sorted = neg_idx.loc[cd_sorted.index]                     # reorder negative mask
+    
+    # ===================================================== Plotting =========================================================
+    
+    plt.figure(figsize=(12, 6))
+    
+    # Base line plot
+    sns.lineplot(
+        x=cd_sorted.index,
+        y=cd_sorted.values,
+        color='blue',
+        zorder=1
+    )
+    
+    # Positive correlations
+    sns.scatterplot(
+        x=cd_sorted.index[~neg_sorted],
+        y=cd_sorted.values[~neg_sorted],
+        color="blue",
+        zorder=2,
+        s=40
+    )
+    
+    # Negative correlations
+    sns.scatterplot(
+        x=cd_sorted.index[neg_sorted],
+        y=cd_sorted.values[neg_sorted],
+        color="orange",
+        zorder=2,
+        s=40
+    )
+    
+    # Labels and formatting
+    plt.xticks(rotation=45, ha='right')
+    plt.xlabel('')
+    plt.ylabel('Correlation Coefficient')
+    plt.title(f'Correlation Decay of features with {attribute.name}')
+    plt.grid(True)
+       
+    # ============================================= Adding Plot Edge Labels ======================================================
+       
+    label_plot_edges(
+        author_names="Korbin Brashears",
+        data_filenames="seth_envGenusCountData_2025.csv",
+        fig_filename=f"../figures/kbrashears_fishData_report_02042026/{attribute.name}_correlation_decay_plot.png",
+        save = save
+    )
+    
     plt.show()
+    
+    return None
