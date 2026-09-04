@@ -77,10 +77,10 @@ print("Accuracy Score:", acc_grb)
 print("F1 Score:", f1_grb)
 print("AUC Score:", auc_grb)
 
-# =============== Algorithm 2 ( XGBoost Regressor ) ==================
+# =============== Algorithm 2 ( XGBoost Classifier ) ==================
 xgb_model = xgb.XGBClassifier(
     n_estimators=1500,
-    learning_rate=0.01,
+    learning_rate=0.001,
     max_depth=7,
     min_child_weight=2,
     gamma=0.1,
@@ -93,8 +93,7 @@ xgb_model = xgb.XGBClassifier(
     tree_method="hist",
     grow_policy="lossguide",
     max_leaves=128,
-    random_state=42
-)
+    random_state=42)
 
 # Training (XGB Regressor)
 xgb_model.fit(X_train, Y_train)
@@ -164,7 +163,7 @@ print("Accuracy Score (Quadratic):", acc_p2)
 print("F1 Score (Quadratic):", f1_p2)
 print("AUC Score (Quadratic):", auc_p2)
 
-# ================= Algorithm 4 ( Decision Tree Regression ) ==================
+# ================= Algorithm 4 ( Decision Tree Classifier ) ==================
 Tree = DecisionTreeClassifier(max_depth=5, random_state=42)
 
 #Training (Decision Tree)
@@ -183,6 +182,7 @@ print("Accuracy Score:", acc_tree)
 print("F1 Score:", f1_tree)
 print("AUC Score:", auc_tree)
 
+# Plot ROC Curves for all models
 fig, axs = plt.subplots(2, 2, figsize=(11, 5.5), dpi=200)
 
 RocCurveDisplay.from_estimator(GrdBoost, X_test, Y_test, ax=axs[0,0])
