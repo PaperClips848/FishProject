@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+
+
+# Large GIS rasters
+*.tif
+*.tiff
